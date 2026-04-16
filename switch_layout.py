@@ -41,12 +41,28 @@ def invert_case(text: str) -> str:
     return text.swapcase()
 
 
+def detect_target_layout(text: str) -> str:
+    en_count = sum(1 for ch in text if ch in EN_ALPHA)
+    ru_count = sum(1 for ch in text if ch in RU_ALPHA)
+
+    if en_count > ru_count:
+        return "ru"
+    if ru_count > en_count:
+        return "us"
+    return ""
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Convert keyboard layout or invert case")
     parser.add_argument(
         "--invert-case",
         action="store_true",
         help="Invert character case instead of converting keyboard layout",
+    )
+    parser.add_argument(
+        "--print-target-layout",
+        action="store_true",
+        help="Print target layout code for the given text: us, ru, or empty",
     )
     return parser.parse_args()
 
@@ -55,6 +71,9 @@ def main():
     args = parse_args()
     text = sys.stdin.read()
     if not text.strip():
+        return
+    if args.print_target_layout:
+        sys.stdout.write(detect_target_layout(text))
         return
     if args.invert_case:
         sys.stdout.write(invert_case(text))
