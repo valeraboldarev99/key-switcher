@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import sys
 import re
 
@@ -36,9 +37,27 @@ def convert_text(text: str) -> str:
     return re.sub(r"\S+", lambda m: translate_token(m.group(0)), text)
 
 
+def invert_case(text: str) -> str:
+    return text.swapcase()
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Convert keyboard layout or invert case")
+    parser.add_argument(
+        "--invert-case",
+        action="store_true",
+        help="Invert character case instead of converting keyboard layout",
+    )
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
     text = sys.stdin.read()
     if not text.strip():
+        return
+    if args.invert_case:
+        sys.stdout.write(invert_case(text))
         return
     sys.stdout.write(convert_text(text))
 

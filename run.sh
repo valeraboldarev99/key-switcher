@@ -14,7 +14,7 @@ PYTHON3=/usr/bin/python3
 # Выполняем команду с логированием в syslog для отладки
 {
     TEXT=$($WL_PASTE 2>&1)
-    RESULT=$(printf '%s' "$TEXT" | $PYTHON3 /home/valeriy/work/programs/key_switcher/switch_layout.py 2>&1)
+    RESULT=$(printf '%s' "$TEXT" | $PYTHON3 /home/valeriy/work/programs/key_switcher/switch_layout.py "$@" 2>&1)
     printf '%s' "$RESULT" | $WL_COPY
 } 2>&1 | tee /tmp/keyswitcher.log
 
